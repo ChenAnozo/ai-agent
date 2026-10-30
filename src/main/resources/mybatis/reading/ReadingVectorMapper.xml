@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuaiagent.reading.persistence.mapper.ReadingVectorMapper">
+    <!-- Materialize the selected version before computing distance: other books can have incompatible dimensions. -->
+    <select id="search" resultType="com.yupi.yuaiagent.reading.api.ReadingTypes$Source">
+        WITH selected AS MATERIALIZED (
+        SELECT v.id,v.content,v.metadata,v.embedding,k.name
+        FROM reading_vectors v JOIN reading_kb k ON v.metadata->>'kbId'=k.id
+        AND v.metadata->>'generation'=k.generation
+        WHERE k.status='READY' AND k.model_id=#{modelId} AND k.dimensions=#{dimensions}
+        AND k.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+        )
+        SELECT id::text AS id,'BOOK' AS type,name AS title,
+        COALESCE(metadata->>'location','正文') AS location,'' AS url,content AS text
+        FROM selected ORDER BY embedding &lt;=&gt; CAST(#{vector} AS vector) LIMIT #{limit}
+    </select>
+    <select id="fullTextIds" resultType="string">
+        WITH selected AS MATERIALIZED (
+        SELECT v.id,v.embedding FROM reading_vectors v JOIN reading_book_chunk c ON v.id=c.vector_id
+        AND v.metadata->>'kbId'=c.kb_id AND v.metadata->>'generation'=c.generation
+        WHERE c.kb_id=#{kbId} AND c.generation=#{generation}
+        )
+        SELECT id::text AS id FROM selected ORDER BY embedding &lt;=&gt; CAST(#{vector} AS vector) LIMIT #{limit}
+    </select>
+</mapper>

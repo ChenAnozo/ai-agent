@@ -1,0 +1,44 @@
+# Private configuration (examples remain publishable)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.local
+**/application-local.yml
+**/application-local.yaml
+**/application-local.properties
+/config/
+
+# User documents, database, generated output and private templates
+/.reading-data/
+/.reading-runtime/
+/chat-memory/
+/tmp/
+/tmp_resume/
+/research-templates/custom/
+/evaluation/
+*.log
+*.kryo
+*.sql.gz
+*.dump
+*.bak
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Build/dependency/IDE files
+**/target/
+**/node_modules/
+**/dist/
+.idea/
+.vscode/
+.agents/
+.codex/
+.aws/
+*.iml
+__pycache__/
+.DS_Store
+Thumbs.db

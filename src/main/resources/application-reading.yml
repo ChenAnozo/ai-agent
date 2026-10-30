@@ -1,0 +1,48 @@
+server:
+  address: 127.0.0.1
+  tomcat:
+    max-part-header-size: 4KB
+spring:
+  ai:
+    dashscope:
+      embedding:
+        options:
+          model: ${READING_EMBEDDING_MODEL:qwen3.7-text-embedding}
+          dimensions: 1024
+  servlet:
+    multipart:
+      max-request-size: 21MB
+reading:
+  enabled: true
+  database-url: ${READING_DATABASE_URL:jdbc:postgresql://localhost:5432/reading}
+  database-user: ${READING_DATABASE_USER:reading}
+  database-password: ${READING_DATABASE_PASSWORD}
+  data-directory: .reading-data
+  skills-directory: research-skills
+  collaboration-max-investigations: ${READING_COLLABORATION_MAX_INVESTIGATIONS:10}
+  investigator-max-calls: ${READING_INVESTIGATOR_MAX_CALLS:4}
+  investigator-hybrid-top-k: ${READING_INVESTIGATOR_HYBRID_TOP_K:3}
+  embedding-model-id: ${READING_EMBEDDING_MODEL_ID:dashscope/${spring.ai.dashscope.embedding.options.model:qwen3.7-text-embedding}}
+  chunk-size: 1200
+  chunk-overlap: 200
+  top-k: 8
+  max-steps: ${READING_MAX_STEPS:10}
+  max-tool-calls: 20
+  max-history-messages: 12
+  history-summary-threshold-tokens: ${READING_HISTORY_SUMMARY_THRESHOLD_TOKENS:12000}
+  history-summary-target-tokens: ${READING_HISTORY_SUMMARY_TARGET_TOKENS:3000}
+  history-summary-output-tokens: ${READING_HISTORY_SUMMARY_OUTPUT_TOKENS:8192}
+  history-summary-batch-tokens: ${READING_HISTORY_SUMMARY_BATCH_TOKENS:16000}
+  history-summary-max-calls: ${READING_HISTORY_SUMMARY_MAX_CALLS:6}
+  max-context-characters: ${READING_MAX_CONTEXT_CHARACTERS:48000}
+  max-full-text-characters: ${READING_MAX_FULL_TEXT_CHARACTERS:1000000}
+  max-full-text-context-characters: ${READING_MAX_FULL_TEXT_CONTEXT_CHARACTERS:1100000}
+  read-characters: 12000
+  hybrid-candidates: 20
+  planner-output-mode: ${READING_PLANNER_OUTPUT_MODE:JSON_OBJECT}
+  planner-diagnostic-characters: 12000
+  context-input-tokens: ${READING_CONTEXT_INPUT_TOKENS:0}
+  full-context-input-tokens: ${READING_FULL_CONTEXT_INPUT_TOKENS:0}
+  synthesis-reserve-tokens: ${READING_SYNTHESIS_RESERVE_TOKENS:6000}
+  context-management-enabled: ${READING_CONTEXT_MANAGEMENT_ENABLED:true}
+  context-output-tokens: ${READING_CONTEXT_OUTPUT_TOKENS:16384}
